@@ -4,6 +4,7 @@ export interface Recipe {
   ingredients: string[];
   tags: string[];
   instructions: string;
+  prepTime?: number;
 }
 
 export interface AppState {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAppStore } from '../store';
 import { Card, Button, SectionHeader } from './ui';
-import { Mic } from 'lucide-react';
+import { Mic, Plus, Check, X } from 'lucide-react';
 import { processVoiceCommand } from '../lib/ai';
 import toast from 'react-hot-toast';
 
@@ -56,6 +56,17 @@ export default function PantryView() {
   const { pantry, updatePantryItem, deletePantryItem, fillPantry, clearPantry, apiKey } = useAppStore();
   const [isListening, setIsListening] = useState(false);
   const [micStatus, setMicStatus] = useState("Skanuj głosem");
+  const [isAdding, setIsAdding] = useState(false);
+  const [newItemName, setNewItemName] = useState("");
+
+  const handleAddNew = () => {
+    if (newItemName.trim()) {
+      updatePantryItem(newItemName.trim(), true);
+      setNewItemName("");
+      setIsAdding(false);
+      toast.success('Dodano produkt');
+    }
+  };
 
   const keys = Object.keys(pantry).sort();
   const missing = keys.filter(k => !pantry[k]);
@@ -124,18 +135,46 @@ export default function PantryView() {
 
   return (
     <>
-      <Card className="flex flex-row items-center gap-4 bg-[var(--color-dark-surface-elevated)] p-5 border-[var(--color-dark-border)] border">
+      <Card className="flex flex-row items-center gap-3.5 bg-[var(--color-dark-surface-elevated)] p-4 border-[var(--color-dark-border)] border mt-2">
         <button 
           onClick={handleMicClick}
-          className={`w-14 h-14 shrink-0 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-gold)] ${isListening ? 'bg-[var(--color-danger)] text-white shadow-[0_0_20px_rgba(239,68,68,0.4)] animate-pulse scale-105' : 'bg-white/5 text-[var(--color-accent-gold)] border border-[var(--color-dark-border)] hover:bg-white/10'}`}
+          className={`w-11 h-11 shrink-0 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-gold)] ${isListening ? 'bg-[var(--color-danger)] text-white shadow-[0_0_20px_rgba(239,68,68,0.4)] animate-pulse scale-105' : 'bg-white/5 text-[var(--color-accent-gold)] border border-[var(--color-dark-border)] hover:bg-white/10'}`}
         >
-          <Mic size={24} strokeWidth={isListening ? 2 : 1.5} />
+          <Mic size={20} strokeWidth={isListening ? 2 : 1.5} />
         </button>
         <div>
-          <h2 className="text-xl font-display font-medium text-white tracking-wide">Szybka Akcja</h2>
-          <p className={`text-xs mt-1 transition-colors ${isListening ? 'text-[var(--color-danger)]' : 'text-[var(--color-text-secondary)]'}`}>{micStatus}</p>
+          <h2 className="text-lg font-display font-medium text-white tracking-wide">Szybka Akcja</h2>
+          <p className={`text-[11px] mt-0.5 transition-colors ${isListening ? 'text-[var(--color-danger)]' : 'text-[var(--color-text-secondary)]'}`}>{micStatus}</p>
         </div>
       </Card>
+
+      <div className="mt-4 px-1">
+        {isAdding ? (
+          <div className="flex items-center gap-2 animate-in slide-in-from-top-2">
+             <input 
+                autoFocus
+                className="flex-1 bg-[var(--color-dark-surface-elevated)] border border-[var(--color-accent-gold)]/30 rounded-xl px-4 py-2.5 text-sm text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent-gold)] transition-colors" 
+                placeholder="Np. Awokado, Jajka..."
+                value={newItemName}
+                onChange={e => setNewItemName(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && handleAddNew()}
+             />
+             <button onClick={handleAddNew} className="bg-emerald-500/10 text-emerald-500 border border-emerald-500/30 p-2.5 rounded-xl hover:bg-emerald-500/20 transition-all flex items-center justify-center shadow-sm">
+               <Check size={18} />
+             </button>
+             <button onClick={() => { setIsAdding(false); setNewItemName(""); }} className="bg-[var(--color-dark-surface-elevated)] text-[var(--color-text-secondary)] border border-[var(--color-dark-border)] p-2.5 rounded-xl hover:text-white transition-all flex items-center justify-center shadow-sm">
+               <X size={18} />
+             </button>
+          </div>
+        ) : (
+          <button 
+            onClick={() => setIsAdding(true)}
+            className="flex items-center gap-1.5 text-[var(--color-text-secondary)] text-[11px] font-medium tracking-widest hover:text-[var(--color-accent-gold)] transition-colors mx-auto uppercase"
+          >
+            <Plus size={14} /> DODAJ WŁASNY PRODUKT RĘCZNIE
+          </button>
+        )}
+      </div>
 
       {!keys.length ? (
         <div className="text-center py-16 px-6 border border-[var(--color-dark-border)] bg-[var(--color-dark-surface)] rounded-2xl shadow-lg mt-8">

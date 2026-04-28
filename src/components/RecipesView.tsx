@@ -126,6 +126,7 @@ export default function RecipesView() {
                            <div className={`w-3 h-3 rounded-full shrink-0 ${availColor}`} title={isAv ? 'Dostępne' : hasN > 0 ? `Częściowo (${hasN}/${ingN})` : 'Brak składników'} />
                         </div>
                         <div className="flex gap-2 mb-4">
+                           {r.prepTime ? <span className="text-[10px] uppercase tracking-wider font-semibold text-[var(--color-text-primary)]">⏱ {r.prepTime}m</span> : null}
                            {isSweet && <span className="text-[10px] uppercase tracking-wider font-semibold text-[#f472b6]">Słodkie</span>}
                            {isSalty && <span className="text-[10px] uppercase tracking-wider font-semibold text-[#38bdf8]">Słone</span>}
                         </div>
@@ -155,6 +156,7 @@ export default function RecipesView() {
                   >
                     <div className="flex justify-between items-start mb-2">
                       <div className="flex gap-1.5 flex-wrap">
+                        {r.prepTime ? <span className="text-[9px] uppercase tracking-wider font-semibold text-[var(--color-text-primary)]">⏱ {r.prepTime}m</span> : null}
                         {isSweet && <span className="text-[9px] uppercase tracking-wider font-semibold text-[#f472b6]">Słodkie</span>}
                         {isSalty && <span className="text-[9px] uppercase tracking-wider font-semibold text-[#38bdf8]">Słone</span>}
                       </div>
@@ -183,16 +185,6 @@ export default function RecipesView() {
           )}
         </>
       )}
-
-      {/* Primary Action Positioned at Bottom (Sticky) */}
-      <div className="fixed bottom-[104px] left-[50%] -translate-x-[50%] w-full max-w-[480px] px-5 z-40">
-        <button 
-          onClick={openAdd}
-          className="w-full p-4 bg-gradient-to-r from-[var(--color-dark-surface-elevated)] to-[var(--color-dark-surface)] border border-[var(--color-accent-gold)]/30 rounded-2xl text-[var(--color-accent-gold)] font-medium text-[15px] tracking-wide cursor-pointer transition-all hover:bg-[var(--color-accent-gold)]/10 active:scale-[0.98] flex items-center justify-center gap-2 shadow-[0_-5px_40px_rgba(0,0,0,0.6)] backdrop-blur-md"
-        >
-          <Plus size={20} strokeWidth={2.5} /> DODAJ NOWY PRZEPIS
-        </button>
-      </div>
 
     </div>
   );

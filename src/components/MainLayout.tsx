@@ -18,6 +18,10 @@ export default function MainLayout() {
   
   const availCount = recipes.filter(r => r.ingredients?.length > 0 && r.ingredients.every(i => pantry[i])).length;
 
+  const openAdd = () => {
+    window.dispatchEvent(new CustomEvent('open-recipe-modal'));
+  };
+
   return (
     <div className="h-[100dvh] w-full max-w-[480px] mx-auto relative overflow-hidden flex flex-col sm:border-x sm:border-[var(--color-dark-border)] bg-[var(--color-dark-bg)]">
       
@@ -40,6 +44,25 @@ export default function MainLayout() {
           </motion.div>
         </AnimatePresence>
       </main>
+
+      <AnimatePresence>
+        {activeTab === 'recipes' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className="absolute bottom-[96px] left-[50%] -translate-x-[50%] w-full max-w-[480px] px-5 z-[90]"
+          >
+            <button 
+              onClick={openAdd}
+              className="w-full p-4 bg-gradient-to-r from-[var(--color-dark-surface-elevated)] to-[var(--color-dark-surface)] border border-[var(--color-accent-gold)]/30 rounded-2xl text-[var(--color-accent-gold)] font-medium text-[15px] tracking-wide cursor-pointer transition-all hover:bg-[var(--color-accent-gold)]/10 active:scale-[0.98] flex items-center justify-center gap-2 shadow-[0_-5px_40px_rgba(0,0,0,0.6)] backdrop-blur-md"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg> 
+              DODAJ NOWY PRZEPIS
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* TAB BAR */}
       <nav className="absolute bottom-0 left-0 right-0 h-[88px] bg-[var(--color-dark-surface)]/90 backdrop-blur-lg border-t border-[var(--color-dark-border)] flex z-[100] pb-[env(safe-area-inset-bottom)]">
